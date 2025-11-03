@@ -138,5 +138,16 @@ void encodeMessage(const string& filename, string codes[]) {
             cout << char('a' + i) << " : " << codes[i] << "\n";
     }
 
-cout << endCode << empty;
-endif 
+    cout << "\nEncoded message:\n";
+
+    ifstream file(filename);
+    char ch;
+    while (file.get(ch)) {
+        if (ch >= 'A' && ch <= 'Z')
+            ch = ch - 'A' + 'a';
+        if (ch >= 'a' && ch <= 'z')
+            cout << codes[ch - 'a'];
+    }
+    cout << "\n";
+    file.close();
+}

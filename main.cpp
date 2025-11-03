@@ -89,24 +89,45 @@ int createLeafNodes(int freq[]) {
 
 // Step 3: Build the encoding tree using heap operations
 int buildEncodingTree(int nextFree) {
-    // TODO:
-    // 1. Create a MinHeap object.
-    // 2. Push all leaf node indices into the heap.
-    // 3. While the heap size is greater than 1:
-    //    - Pop two smallest nodes
-    //    - Create a new parent node with combined weight
-    //    - Set left/right pointers
-    //    - Push new parent index back into the heap
-    // 4. Return the index of the last remaining node (root)
-    return -1; // placeholder
+   MinHeap heap;
+    for (int i = 0; i < nextFree; i++) {
+        heap.push(i);
+    }
+    while (heap.size() > 1) {
+        // pop smallest nodes 
+        int idx1 = heap.pop();
+        int idx2 = heap.pop();
+
+        // creates a new parent node 
+        charArr.push_back('*'); 
+        weightArr.push_back(weightArr[idx1] + weightArr[idx2]);
+        leftArr.push_back(idx1);
+        rightArr.push_back(idx2);
+
+        // push new parent index back in the heap 
+        heap.push(nextFree);
+        nextFree++;
+    }
+    // return the index 
+  return heap.pop(); 
 }
 
 // Step 4: Use an STL stack to generate codes
-void generateCodes(int root, string codes[]) {
-    // TODO:
-    // Use stack<pair<int, string>> to simulate DFS traversal.
-    // Left edge adds '0', right edge adds '1'.
-    // Record code when a leaf node is reached.
+void generateCodes(int root, string codes[]) { 
+   stack<pair<int , string>>stk; // stack for iteratives DFS
+    stk.push({root,""}) 
+
+        while(!stk.empty()){ 
+        auto [ node , path ] = stk.top();
+        stk.pop();
+
+        if (leftArr[node] == -1 && rightArr[node] == -1) // if node is a leaf = no children
+            int index = charArr[node] - 'a';
+        codes[index] = path; 
+} else { 
+if (rightArr[node] != -1) stk.push({rightArr[node] , path + "1"});
+if (leftArr[node] != -1) stk.push({leftArr[node] , path + "0"});
+    }
 }
 
 // Step 5: Print table and encoded message

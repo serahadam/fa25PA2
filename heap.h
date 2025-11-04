@@ -6,6 +6,7 @@
 #define HEAP_H
 
 #include <iostream>
+#include <algorithm>
 using namespace std;
 
 struct MinHeap {
@@ -14,37 +15,14 @@ struct MinHeap {
 
     MinHeap() { size = 0; }
 
-    void push(int idx, int weightArr[]) {
-       data[size] = idx;
-        upheap ( size , weightArr ) 
-            size++;
-    }
 
-    int pop(int weightArr[]) {
-        if ( size == 0 ) {
-            cerr << "heap is empty!\n"
-                return -1;
-    }
-        int root = data[0];
-        data[0] = data[size - 1];
-        size--;
-
-    if ( size > 0 ) 
-        downheap ( 0, weightArr); 
-
-    return root; 
-    }
-
-    void upheap(int pos, int weightArr[]) {
-        while upheap( int pos, int weightArr[]) { 
+void upheap(int pos, int weightArr[]) { 
             while ( pos > 0 ) { 
                 int parent = ( pos - 1 ) / 2;
             if (weightArr[data[pos]] < weightArr[data[parent]]) {
                 swap (data[pos], data[parent]);
                     pos = parent;
-    } else {
-                break;
-            }
+           } else break;
      }
 }
 
@@ -63,12 +41,29 @@ struct MinHeap {
     if (smallest !=pos) {
         swap (data[pos], data[smallest]);
         pos = smallest;
-    } else { 
-        break; 
-   
-            }
+            } else break; 
         }
     }
+
+ void push(int idx, int weightArr[]) { 
+     data[size] = idx; 
+     upheap ( size , weightArr ) 
+         size++; 
+       }
+
+    int pop(int weightArr[]) {
+        if ( size == 0 ) {
+            cerr << "heap is empty!\n"
+                return -1;
+    }
+        int root = data[0];
+        data[0] = data[size - 1];
+        size--;
+    if ( size > 0 ) 
+        downheap ( 0, weightArr); 
+    return root; 
+    }
 };
+
 
 #endif

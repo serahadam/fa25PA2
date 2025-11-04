@@ -9,7 +9,7 @@
 using namespace std;
 
 // Global arrays for node information
-const int MAX_NODES = 64;
+const int MAX_NODES = 128;
 int weightArr[MAX_NODES];
 int leftArr[MAX_NODES];
 int rightArr[MAX_NODES];
@@ -91,43 +91,46 @@ int createLeafNodes(int freq[]) {
 int buildEncodingTree(int nextFree) {
    MinHeap heap;
     for (int i = 0; i < nextFree; i++) {
-        heap.push(i);
+        heap.push(i, weightArr);
     }
-    while (heap.size() > 1) {
+    while (heap.size > 1) {
         // pop smallest nodes 
-        int idx1 = heap.pop();
-        int idx2 = heap.pop();
+        int idx1 = heap.pop(weightArr);
+        int idx2 = heap.pop(weightArr);
 
         // creates a new parent node 
-        charArr.push_back('*'); 
-        weightArr.push_back(weightArr[idx1] + weightArr[idx2]);
-        leftArr.push_back(idx1);
-        rightArr.push_back(idx2);
+        charArr[nextFree] = '*'; 
+        weightArr[nextFree] = weightArr[idx1] + weightArr[idx2];
+        leftArr[nextFree] = idx1;
+        rightArr[nextFree] = idx2;
 
         // push new parent index back in the heap 
-        heap.push(nextFree);
+        heap.push(nextFree , weightArr);
         nextFree++;
     }
     // return the index 
-  return heap.pop(); 
+  return heap.pop(weightArr); 
 }
 
 // Step 4: Use an STL stack to generate codes
 void generateCodes(int root, string codes[]) { 
-   stack<pair<int , string>>stk; // stack for iteratives DFS
-    stk.push({root,""}) 
+   stack<pair<int , string >>stk; // stack for iteratives DFS
+    stk.push({root,""});
 
         while(!stk.empty()){ 
         auto [ node , path ] = stk.top();
         stk.pop();
 
-        if (leftArr[node] == -1 && rightArr[node] == -1) // if node is a leaf = no children
+        if (leftArr[node] == -1 && rightArr[node] == -1) { // if node is a leaf = no children
             int index = charArr[node] - 'a';
         codes[index] = path; 
 } else { 
-if (rightArr[node] != -1) stk.push({rightArr[node] , path + "1"});
-if (leftArr[node] != -1) stk.push({leftArr[node] , path + "0"});
+if (rightArr[node] != -1) 
+    stk.push({rightArr[node] , path + "1"});
+if (leftArr[node] != -1) 
+    stk.push({leftArr[node] , path + "0"});
     }
+  }
 }
 
 // Step 5: Print table and encoded message
